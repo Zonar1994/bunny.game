@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bunny Clicker Retro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="initializeGame()">
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="sounds/background.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Header -->
+    <div id="header">
+        🐇 Bunny Clicker Retro
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div id="menu">
+        <select onchange="handleMenu(this.value)">
+            <option value="">🔽 Menu</option>
+            <option value="toggleMusicOn">🔊 Turn Music On</option>
+            <option value="toggleMusicOff">🔇 Turn Music Off</option>
+            <option value="storybook">📖 Story Book</option>
+            <option value="restart">🔄 Restart Game</option>
+            <option value="save">💾 Save Game</option>
+            <option value="load">📂 Load Game</option>
+        </select>
+    </div>
+
+    <!-- Warning Message -->
+    <div id="warningMessage" style="display: none;">
+        ⚠️ Not enough Carrots to sustain your Bunnies!
+    </div>
+
+    <!-- Counters -->
+    <div id="counters">
+        <div>
+            🥕 Carrots: <span id="carrotCount">0</span>
+        </div>
+        <div>
+            🐰 Bunnies: <span id="bunnyCount">0</span>
+        </div>
+        <div>
+            💖 Cuteness: <span id="cutenessCount">0</span>
+        </div>
+        <div id="lostBunniesCounter" style="display: none;">
+            💔 Lost Bunnies: <span id="lostBunniesCount">0</span>
+        </div>
+        <div id="soupCounter" style="display: none;">
+            🍲 Soup: <span id="soupCount">0</span>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div id="buttons">
+        <button id="findCarrot" onclick="findCarrot()">🔍 Find a Carrot</button>
+        <button id="adoptBunny" onclick="adoptBunny()" disabled>
+            🐰 Adopt a Bunny (Cost: <span id="adoptBunnyCost">3</span> 💖)
+        </button>
+    </div>
+
+    <!-- Field Visualization -->
+    <div id="field">
+        <div id="carrotField"></div>
+        <div id="bunnyField"></div>
+    </div>
+
+    <!-- Upgrade Shop -->
+    <div id="upgradeShop">
+        <!-- Upgrades will be dynamically added here -->
+    </div>
+
+    <!-- Production Rates -->
+    <div id="productionRates" style="display: none;">
+        🥕 Carrots per Minute: <span id="carrotsPerMinute">0</span><br>
+        💖 Cuteness per Minute: <span id="cutenessPerMinute">0</span>
+    </div>
+
+    <!-- Soup Section -->
+    <div id="soupSection" style="display: none;">
+        <button id="cookSoupButton" onclick="cookSoup()">
+            🍳 Cook Bunnies (Use 10 💔 to make 1 🍲)
+        </button>
+    </div>
+
+    <!-- Pop-up Window -->
+    <div id="popup" style="display: none;">
+        <p id="popupMessage"></p>
+        <button id="popupYesButton"></button>
+        <button id="popupNoButton"></button>
+    </div>
+
+    <!-- Storybook -->
+    <div id="storybook" style="display: none;">
+        <h2>📖 Story Book</h2>
+        <div id="storybookTabs">
+            <button onclick="showTab('stories')">Stories</button>
+            <button onclick="showTab('upgrades')">Upgrades</button>
+        </div>
+        <div id="storybookContent">
+            <!-- Content will be dynamically added -->
+        </div>
+        <button onclick="closeStorybook()">Close</button>
+    </div>
+
+    <!-- Click Animation -->
+    <div id="clickEffect" style="display: none;">✨</div>
+
+    <script src="script.js"></script>
+</body>
+</html>

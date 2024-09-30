@@ -1,0 +1,374 @@
+/* CSS Styles */
+
+/* Reset Margin and Padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Style */
+body {
+    background-color: #fff0f5;
+    color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    overflow-x: hidden;
+}
+
+/* Grid Background */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(#ffc0cb 1px, transparent 1px),
+                      linear-gradient(90deg, #ffc0cb 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: -1;
+}
+
+/* Header */
+#header {
+    background-color: #ffb6c1;
+    padding: 10px;
+    text-align: center;
+    font-size: 28px;
+    color: #fff;
+    text-shadow: 2px 2px #cc6699;
+}
+
+/* Warning Message */
+#warningMessage {
+    background-color: #ffcccc;
+    color: #cc0000;
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    animation: flash 1s infinite;
+}
+
+@keyframes flash {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0;
+    }
+}
+
+/* Counters */
+#counters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px;
+    font-size: 20px;
+}
+
+#counters div {
+    background-color: #fff;
+    padding: 10px;
+    border: 2px solid #ffb6c1;
+    border-radius: 10px;
+    width: 22%;
+    text-align: center;
+    margin: 10px;
+    box-shadow: 2px 2px 5px #cc6699;
+    transition: transform 0.2s;
+}
+
+#counters div:hover {
+    transform: scale(1.05);
+}
+
+/* Buttons */
+#buttons {
+    text-align: center;
+    margin: 20px;
+}
+
+#buttons button {
+    background-color: #ffb6c1;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #cc6699;
+    transition: transform 0.2s;
+}
+
+#buttons button:hover {
+    transform: scale(1.05);
+}
+
+#buttons button:disabled {
+    background-color: #ffe6f2;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Field Visualization */
+#field {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+#carrotField, #bunnyField {
+    width: 45%;
+    min-height: 200px;
+    background-color: #fff5f5;
+    border: 2px solid #ffb6c1;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Carrot Styles */
+.carrot {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-image: url('images/carrot.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* Fixed position: No animations or transformations */
+}
+
+/* Bunny Styles */
+.bunny {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-image: url('images/bunny.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* Fixed position: No animations or transformations */
+}
+
+/* More Text */
+.moreText {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 20px;
+    color: #ff69b4;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+}
+
+/* Upgrade Shop */
+#upgradeShop {
+    margin: 20px;
+    text-align: center;
+}
+
+.upgrade-button {
+    background-color: #ffb6c1;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #cc6699;
+    transition: transform 0.2s;
+}
+
+.upgrade-button:hover {
+    transform: scale(1.05);
+}
+
+.upgrade-button:disabled {
+    background-color: #ffe6f2;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Production Rates */
+#productionRates {
+    text-align: center;
+    margin: 20px;
+    font-size: 20px;
+}
+
+/* Soup Section */
+#soupSection {
+    text-align: center;
+    margin: 20px;
+}
+
+#soupSection button {
+    background-color: #ffb6c1;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #cc6699;
+    transition: transform 0.2s;
+}
+
+#soupSection button:hover {
+    transform: scale(1.05);
+}
+
+#soupSection button:disabled {
+    background-color: #ffe6f2;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Pop-up Window */
+#popup {
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: 30%;
+    width: 40%;
+    background-color: #fff;
+    border: 5px solid #ffb6c1;
+    border-radius: 20px;
+    z-index: 1000;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 5px 5px 15px #cc6699;
+}
+
+#popupMessage {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#popupYesButton, #popupNoButton {
+    background-color: #ffb6c1;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    margin: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #cc6699;
+    transition: transform 0.2s;
+}
+
+#popupYesButton:hover, #popupNoButton:hover {
+    transform: scale(1.05);
+}
+
+#popupYesButton:disabled, #popupNoButton:disabled {
+    background-color: #ffe6f2;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Storybook */
+#storybook {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff0f5;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+#storybook h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #ffb6c1;
+}
+
+#storybookTabs {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#storybookTabs button {
+    background-color: #ffb6c1;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#storybookContent {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.polaroid {
+    background-color: #fff;
+    width: 200px;
+    margin: 10px;
+    padding: 20px;
+    border: 5px solid #ffb6c1;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    box-shadow: 3px 3px 10px #cc6699;
+    transition: transform 0.2s;
+}
+
+.polaroid:hover {
+    transform: scale(1.05);
+}
+
+/* Dropdown Menu */
+#menu {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+
+#menu select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    background-color: #ffc0cb;
+    color: #fff;
+    border: none;
+    box-shadow: 2px 2px 5px #cc6699;
+}
+
+#menu select:hover {
+    cursor: pointer;
+}
+
+/* Click Animation */
+#clickEffect {
+    position: absolute;
+    color: #ff69b4;
+    font-size: 30px;
+    pointer-events: none;
+    z-index: 1000;
+    animation: clickEffect 0.5s linear;
+}
+
+@keyframes clickEffect {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
+}
