@@ -86,6 +86,7 @@ function sayHelloToFirstBunny() {
     document.getElementById('adoptBunny').disabled = false;
     closePopup();
     addStoryEvent('You attracted your first bunny! Say hello to receive Cuteness.');
+    updateField(); // Update the UI immediately
 }
 
 // Adopt a Bunny
@@ -113,7 +114,7 @@ function startCarrotConsumption() {
             } else {
                 let canEat = Math.floor(carrots / bunnyCarrotConsumption);
                 let lost = bunnies - canEat - 1; // First bunny can't die
-                carrots = 0;
+                carrots = Math.max(carrots - (canEat * bunnyCarrotConsumption), 0);
                 if (lost > 0) {
                     bunnies -= lost;
                     lostBunnies += lost;
@@ -131,6 +132,7 @@ function startCarrotConsumption() {
                 showWarningMessage();
             }
             updateCounters();
+            updateField(); // Update the UI to reflect changes
         }
     }, carrotConsumptionInterval);
 }
@@ -172,27 +174,39 @@ function updateField() {
     const bunnyField = document.getElementById('bunnyField');
     const maxItems = 50;
 
-    // Carrots
+    // Update Carrots
     const currentCarrots = carrotField.querySelectorAll('.carrot').length;
     const carrotsToAdd = Math.min(carrots, maxItems) - currentCarrots;
-    for (let i = 0; i < carrotsToAdd; i++) {
-        const carrot = document.createElement('div');
-        carrot.className = 'carrot';
-        carrot.style.left = `${Math.random() * 90}%`;
-        carrot.style.top = `${Math.random() * 90}%`;
-        carrotField.appendChild(carrot);
+    if (carrotsToAdd > 0) {
+        for (let i = 0; i < carrotsToAdd; i++) {
+            const carrot = document.createElement('div');
+            carrot.className = 'carrot';
+            carrot.style.left = `${Math.random() * 90}%`;
+            carrot.style.top = `${Math.random() * 90}%`;
+            carrotField.appendChild(carrot);
+        }
+    } else if (carrotsToAdd < 0) {
+        for (let i = 0; i < Math.abs(carrotsToAdd); i++) {
+            if (carrotField.lastChild) carrotField.removeChild(carrotField.lastChild);
+        }
     }
     toggleMoreIndicator(carrotField, carrots, maxItems);
 
-    // Bunnies
+    // Update Bunnies
     const currentBunnies = bunnyField.querySelectorAll('.bunny').length;
     const bunniesToAdd = Math.min(bunnies, maxItems) - currentBunnies;
-    for (let i = 0; i < bunniesToAdd; i++) {
-        const bunny = document.createElement('div');
-        bunny.className = 'bunny';
-        bunny.style.left = `${Math.random() * 90}%`;
-        bunny.style.top = `${Math.random() * 90}%`;
-        bunnyField.appendChild(bunny);
+    if (bunniesToAdd > 0) {
+        for (let i = 0; i < bunniesToAdd; i++) {
+            const bunny = document.createElement('div');
+            bunny.className = 'bunny';
+            bunny.style.left = `${Math.random() * 90}%`;
+            bunny.style.top = `${Math.random() * 90}%`;
+            bunnyField.appendChild(bunny);
+        }
+    } else if (bunniesToAdd < 0) {
+        for (let i = 0; i < Math.abs(bunniesToAdd); i++) {
+            if (bunnyField.lastChild) bunnyField.removeChild(bunnyField.lastChild);
+        }
     }
     toggleMoreIndicator(bunnyField, bunnies, maxItems);
 }
@@ -311,7 +325,7 @@ function restartGame() {
     updateCounters(); renderUpgradeShop();
 }
 
-// Clear Storybook
+// Clear Storybook Content
 function clearStorybook() {
     document.getElementById('storybookContent').innerHTML = '';
 }
@@ -403,24 +417,28 @@ function calculateProductionRates() {
 // Check for Soup Option
 function checkForSoupOption() {
     if (lostBunnies >= 10 && !soupOptionUnlocked && !askedAboutSoup) {
-        showPopupYesNo('You have 10 lost bunnies. Do you want to make soup?', acceptSoupOption, declineSoupOption);
+        showPopupYesNo('You have 10 lost bunnies. Do you want to make soup?', acceptSoupOption, declineSoupOptionHandler);
         askedAboutSoup = true;
     }
 }
 
 function acceptSoupOption() {
-    soupOptionUnlocked = true;
-    lostBunnies -= 10;
-    soup += 1;
-    updateCounters();
-    document.getElementById('soupCounter').style.display = 'block';
-    document.getElementById('soupSection').style.display = 'block';
-    closePopup();
-    addStoryEvent('You decided to make soup from lost bunnies.');
-    checkForHunterStory();
+    if (lostBunnies >= 10) {
+        soupOptionUnlocked = true;
+        lostBunnies -= 10;
+        soup += 1;
+        updateCounters();
+        document.getElementById('soupCounter').style.display = 'block';
+        document.getElementById('soupSection').style.display = 'block';
+        closePopup();
+        addStoryEvent('You decided to make soup from lost bunnies.');
+        checkForHunterStory();
+    } else {
+        alert('Not enough lost bunnies to make soup.');
+    }
 }
 
-function declineSoupOption() {
+function declineSoupOptionHandler() {
     closePopup();
     declinedSoupOption = true;
 }
@@ -459,8 +477,12 @@ function startHunter() {
     if (!hunterInterval) {
         hunterInterval = setInterval(() => {
             if (soup >=1 ) {
-                soup--; bunnies += Math.floor(10 * Math.pow(1.1, upgrades.hunterBoostLevel));
+                soup--; 
+                let newBunnies = Math.floor(10 * Math.pow(1.1, upgrades.hunterBoostLevel));
+                bunnies += newBunnies;
                 updateCounters();
+                playSound('hunter');
+                addStoryEvent(`The Hunter brought ${newBunnies} bunnies for you!`);
             } else {
                 clearInterval(hunterInterval); hunterInterval = null;
             }
@@ -487,8 +509,38 @@ function loadGame() {
     if (gameDataString) {
         try {
             const data = JSON.parse(gameDataString);
-            Object.assign(this, data);
-            updateCounters(); renderUpgradeShop();
+            // Restore game state
+            carrots = data.carrots || 0;
+            bunnies = data.bunnies || 0;
+            cuteness = data.cuteness || 0;
+            lostBunnies = data.lostBunnies || 0;
+            soup = data.soup || 0;
+            bunnyAdoptionCost = data.bunnyAdoptionCost || 3;
+            bunnyAdoptionCostCap = data.bunnyAdoptionCostCap || 10;
+            bunnyCutenessProductionRate = data.bunnyCutenessProductionRate || 1;
+            bunnyCarrotConsumption = data.bunnyCarrotConsumption || 1;
+            upgrades = data.upgrades || {
+                productionDisplay: false, autoClicker: false, carrotGen: false,
+                cutenessBoost: false, doubleBunny: false, hunterBoostLevel: 0,
+                bunnyCostReset: false
+            };
+            availableUpgrades = data.availableUpgrades || availableUpgrades;
+            purchasedUpgrades = data.purchasedUpgrades || [];
+            storyEvents = data.storyEvents || [];
+            firstBunnyAttracted = data.firstBunnyAttracted || false;
+            firstBunnyDied = data.firstBunnyDied || false;
+            soupOptionUnlocked = data.soupOptionUnlocked || false;
+            hunterUnlocked = data.hunterUnlocked || false;
+            askedAboutSoup = data.askedAboutSoup || false;
+            declinedSoupOption = data.declinedSoupOption || false;
+
+            // Update UI
+            document.getElementById('adoptBunny').disabled = !(bunnies > 0);
+            document.getElementById('lostBunniesCounter').style.display = lostBunnies > 0 ? 'block' : 'none';
+            document.getElementById('soupCounter').style.display = soup > 0 ? 'block' : 'none';
+            document.getElementById('soupSection').style.display = soup > 0 ? 'block' : 'none';
+            document.getElementById('productionRates').style.display = upgrades.productionDisplay ? 'block' : 'none';
+            updateCounters(); renderUpgradeShop(); updateField();
             alert('Game loaded successfully!');
         } catch (e) {
             alert('Invalid save data.');
@@ -517,8 +569,11 @@ function playSound(soundName) {
 // Show Click Effect
 function showClickEffect(e) {
     const clickEffect = document.getElementById('clickEffect');
-    clickEffect.style.left = `${e.clientX}px`;
-    clickEffect.style.top = `${e.clientY}px`;
+    // Get the event's clientX and clientY from the last mouse/touch event
+    let x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+    let y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+    clickEffect.style.left = `${x}px`;
+    clickEffect.style.top = `${y}px`;
     clickEffect.style.display = 'block';
     setTimeout(() => clickEffect.style.display = 'none', 500);
 }
